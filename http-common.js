@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: "http://localhost:13050/",
+  baseURL: process.env.VUE_APP_API_URI,
   headers: {
     "Content-type": "application/json"
   }

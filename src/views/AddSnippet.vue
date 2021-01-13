@@ -219,9 +219,6 @@ export default {
         this.SHOW_SPINNER();
         axios
           .post(`${process.env.VUE_APP_CLOUDINARY_UPLOAD_URL}`, formData)
-          .then(response => {
-            console.log(response);
-          })
           .catch(error => {
             console.log(error);
           });

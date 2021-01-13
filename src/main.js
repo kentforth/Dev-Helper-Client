@@ -18,7 +18,8 @@ import {
   faTrash,
   faTimesCircle,
   faClone,
-  faFilter
+  faFilter,
+  faCloudUploadAlt
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 library.add(
@@ -30,7 +31,8 @@ library.add(
   faTrash,
   faTimesCircle,
   faClone,
-  faFilter
+  faFilter,
+  faCloudUploadAlt
 );
 
 Vue.component("font-awesome-icon", FontAwesomeIcon);

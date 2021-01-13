@@ -1,5 +1,5 @@
 <template>
-  <div class="addSnippet">
+  <div class="add-snippet">
     <div class="container">
       <!--PAGE TITLE-->
       <div class="page-title">
@@ -70,7 +70,38 @@
                 <span>{{ tagItem }}</span>
               </div>
             </div>
+
+            <div class="images">
+              <input
+                type="file"
+                multiple
+                ref="files"
+                @change="selectFiles"
+                class="file-input"
+                id="file"
+                accept="image/png, image/jpeg, image/jpg"
+              />
+              <label for="file">
+                <span>Choose Images</span>
+                <font-awesome-icon icon="cloud-upload-alt" class="fa-upload" />
+              </label>
+
+              <div
+                v-for="(file, index) in files"
+                class="image-item"
+                :key="index"
+              >
+                <p>{{ file.name }}</p>
+              </div>
+            </div>
           </div>
+
+          <beat-loader
+            :loading="isLoading"
+            :color="spinnerColor"
+            :size="spinnerSize"
+            class="spinner"
+          ></beat-loader>
 
           <Button class="btn-add-snippet">
             Create Snippet
@@ -82,29 +113,45 @@
 </template>
 
 <script>
-import SnippetsService from "../services/SnippetsService";
+// import SnippetsService from "../services/SnippetsService";
 import Button from "../components/Button";
+import BeatLoader from "vue-spinner/src/BeatLoader";
+import axios from "axios";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "AddSnippet",
-  components: { Button },
+  components: { Button, BeatLoader },
   data: () => ({
+    cloudinaryPreset: "dev-helper",
     tagName: "",
+    spinnerColor: "#C89FF4",
+    spinnerSize: "24px",
     tags: [],
     steps: [],
     stepCounter: 1,
+    imageCounter: 0,
     stepTitle: "",
     snippetTitle: "",
+    files: [],
+    images: [],
     step: {
       title: `Step 1`,
       text: ""
     }
   }),
-
+  computed: {
+    ...mapState("snippets", ["isLoading"])
+  },
   mounted() {
     this.steps.push(this.step);
   },
   methods: {
+    ...mapActions("snippets", ["SHOW_SPINNER", "HIDE_SPINNER"]),
+    selectFiles() {
+      const files = this.$refs.files.files;
+      this.files = [...this.files, ...files];
+    },
     addStep() {
       this.stepCounter++;
 
@@ -137,7 +184,30 @@ export default {
     },
 
     async addSnippet() {
-      const response = await SnippetsService.create({
+      Object.values(this.files).forEach(file => {
+        let number = this.imageCounter++;
+        let fileName = this.snippetTitle
+          .split(" ")
+          .join("")
+          .toLowerCase();
+        fileName = fileName + "_" + number;
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", this.cloudinaryPreset);
+        formData.append("public_id", fileName);
+        formData.append("tags", this.snippetTitle.toLowerCase());
+        this.SHOW_SPINNER();
+        axios
+          .post(`${process.env.VUE_APP_CLOUDINARY_UPLOAD_URL}`, formData)
+          .then(() => {
+            this.HIDE_SPINNER();
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      });
+
+      /*const response = await SnippetsService.create({
         title: this.snippetTitle,
         tags: this.tags,
         steps: this.steps
@@ -150,7 +220,7 @@ export default {
         this.$router.push("/");
       } else {
         console.log(response);
-      }
+      }*/
     }
   }
 };
@@ -204,7 +274,7 @@ span {
   display: grid;
   justify-content: center;
   grid-template-columns: 1fr 1fr;
-  grid-gap: 10%;
+  grid-column-gap: 10%;
 }
 
 .label {
@@ -330,8 +400,44 @@ span {
   }
 }
 
+.images {
+  input[type="file"] {
+    display: none;
+  }
+
+  label {
+    margin-top: 1em;
+    color: white;
+    height: 60px;
+    background-color: $secondary;
+    padding: 0.5em;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    justify-content: center;
+    width: 60%;
+    border-radius: 4px;
+  }
+}
+
+.fa-upload {
+  margin-left: 10px;
+  font-size: 2rem;
+}
+
+.image-item p {
+  color: $pink;
+}
+
 .btn-add-snippet {
   grid-column: span 2;
   justify-self: center;
+  margin-top: 2em;
+}
+
+.spinner {
+  position: absolute;
+  top: 65%;
+  left: 70%;
 }
 </style>

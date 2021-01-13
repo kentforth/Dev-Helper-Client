@@ -64,9 +64,7 @@ export default {
     getImagesFromCloudinary() {
       try {
         axios
-          .get(
-            `https://res.cloudinary.com/kentforth/image/list/${this.title}.json`
-          )
+          .get(`${process.env.VUE_APP_CLOUDINARY_IMAGE_LIST}${this.title}.json`)
           .then(response => {
             this.images = response.data.resources;
             this.HIDE_SPINNER();

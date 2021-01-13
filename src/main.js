@@ -6,6 +6,8 @@ import "./assets/scss/styles.scss";
 import VueToast from "vue-toast-notification";
 import "vue-toast-notification/dist/theme-sugar.css";
 
+import Cloudinary, { CldImage } from "cloudinary-vue";
+
 import store from "./store";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -38,6 +40,12 @@ library.add(
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.config.productionTip = false;
 Vue.use(VueToast);
+Vue.use(Cloudinary, {
+  configuration: { cloudName: "kentforth" },
+  components: {
+    CldImage
+  }
+});
 
 new Vue({
   router,

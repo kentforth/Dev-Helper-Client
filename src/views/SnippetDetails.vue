@@ -23,6 +23,17 @@
         <span :class="{ copy: activeElement === index }">Copied!</span>
       </Step>
     </div>
+
+    <div class="images" v-if="hasImages">
+      <img
+        :src="
+          `https://res.cloudinary.com/kentforth/image/upload/${image.public_id}.${image.format}`
+        "
+        alt=""
+        v-for="image in images"
+        :key="image.public_id"
+      />
+    </div>
   </div>
 </template>
 
@@ -30,25 +41,51 @@
 import Step from "../components/Step";
 import SnippetsService from "../services/SnippetsService";
 import Tag from "../components/Tag";
+import axios from "axios";
+import { mapActions } from "vuex";
+
 export default {
   name: "SnippetDetail",
   components: { Tag, Step },
   data: () => ({
     title: "",
     steps: [],
+    images: [],
+    hasImages: false,
     activeElement: undefined,
     tags: []
   }),
+
   created() {
     this.getSnippetById();
   },
   methods: {
+    ...mapActions("snippets", ["SHOW_SPINNER", "HIDE_SPINNER"]),
+    getImagesFromCloudinary() {
+      try {
+        axios
+          .get(
+            `https://res.cloudinary.com/kentforth/image/list/${this.title}.json`
+          )
+          .then(response => {
+            this.images = response.data.resources;
+            this.HIDE_SPINNER();
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async getSnippetById() {
+      this.SHOW_SPINNER();
       try {
         let snippet = await SnippetsService.get(this.$route.params.id);
         this.title = snippet.data.title;
         this.steps = snippet.data.steps;
         this.tags = snippet.data.tags;
+        this.hasImages = snippet.data.hasImages;
+        if (this.hasImages) {
+          this.getImagesFromCloudinary();
+        }
       } catch (error) {
         console.log(error);
       }
@@ -128,5 +165,23 @@ h1 {
 
 .fa-trash {
   color: $white;
+}
+
+.images {
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-row-gap: 3em;
+  justify-items: center;
+  padding-bottom: 3em;
+
+  img {
+    width: 700px;
+    height: 600px;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 0 18px 0 #000000;
+  }
 }
 </style>

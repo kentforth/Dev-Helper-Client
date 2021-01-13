@@ -79,7 +79,7 @@
                 @change="selectFiles"
                 class="file-input"
                 id="file"
-                accept="image/png, image/jpeg, image/jpg"
+                accept="image/png, image/jpeg, image/jpg, image/webp"
               />
               <label for="file">
                 <span>Choose Images</span>
@@ -113,7 +113,7 @@
 </template>
 
 <script>
-// import SnippetsService from "../services/SnippetsService";
+import SnippetsService from "../services/SnippetsService";
 import Button from "../components/Button";
 import BeatLoader from "vue-spinner/src/BeatLoader";
 import axios from "axios";
@@ -129,6 +129,7 @@ export default {
     spinnerSize: "24px",
     tags: [],
     steps: [],
+    hasImages: false,
     stepCounter: 1,
     imageCounter: 0,
     stepTitle: "",
@@ -183,6 +184,25 @@ export default {
       });
     },
 
+    async createSnippetInDatabase() {
+      this.hasImages = !!this.files.length;
+      const response = await SnippetsService.create({
+        title: this.snippetTitle,
+        tags: this.tags,
+        steps: this.steps,
+        hasImages: this.hasImages
+      });
+
+      if (response.status === 201) {
+        this.$toast.success("Snippet is created", {
+          duration: 2500,
+          position: "bottom"
+        });
+      } else {
+        console.log(response);
+      }
+    },
+
     async addSnippet() {
       Object.values(this.files).forEach(file => {
         let number = this.imageCounter++;
@@ -199,28 +219,16 @@ export default {
         this.SHOW_SPINNER();
         axios
           .post(`${process.env.VUE_APP_CLOUDINARY_UPLOAD_URL}`, formData)
-          .then(() => {
-            this.HIDE_SPINNER();
+          .then(response => {
+            console.log(response);
           })
           .catch(error => {
             console.log(error);
           });
       });
-
-      /*const response = await SnippetsService.create({
-        title: this.snippetTitle,
-        tags: this.tags,
-        steps: this.steps
-      });
-      if (response.status === 201) {
-        this.$toast.success("Snippet is created", {
-          duration: 2500,
-          position: "bottom"
-        });
-        this.$router.push("/");
-      } else {
-        console.log(response);
-      }*/
+      await this.HIDE_SPINNER();
+      await this.createSnippetInDatabase();
+      await this.$router.push("/");
     }
   }
 };

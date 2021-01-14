@@ -12,7 +12,7 @@
       <Tag v-for="(tag, index) in tags" :key="index">{{ tag }}</Tag>
     </div>
     <div class="steps">
-      <Step v-for="(step, index) in steps" :key="step.title">
+      <Step v-for="(step, index) in allSteps" :key="step.title">
         <label for="text" v-if="step.title !== ''">{{ step.title }}</label>
         <textarea id="text" rows="6" v-model="step.text"></textarea>
         <font-awesome-icon
@@ -58,6 +58,11 @@ export default {
 
   created() {
     this.getSnippetById();
+  },
+  computed: {
+    allSteps() {
+      return this.steps;
+    }
   },
   methods: {
     ...mapActions("snippets", ["SHOW_SPINNER", "HIDE_SPINNER"]),

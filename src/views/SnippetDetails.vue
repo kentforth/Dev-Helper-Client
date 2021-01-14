@@ -90,8 +90,8 @@ export default {
     },
     copyStep(index, stepText) {
       this.activeElement = index;
-      navigator.clipboard.writeText(stepText);
       console.log(stepText);
+      navigator.clipboard.writeText(stepText);
     },
 
     async deleteSnippet() {

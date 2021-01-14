@@ -18,7 +18,7 @@
         <font-awesome-icon
           icon="clone"
           class="icon"
-          @click="copyStep(index, step.text)"
+          @click="copyStep(index, steps[0].text)"
         />
         <span :class="{ copy: activeElement === index }">Copied!</span>
       </Step>
@@ -90,7 +90,8 @@ export default {
     },
     copyStep(index, stepText) {
       this.activeElement = index;
-      navigator.clipboard.writeText(stepText);
+      console.log(stepText);
+      // navigator.clipboard.writeText(stepText);
     },
     async deleteSnippet() {
       try {

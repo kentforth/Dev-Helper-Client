@@ -20,7 +20,6 @@
           class="icon"
           @click="copyStep(index, step.title)"
         />
-        <button>Copy</button>
         <span :class="{ copy: activeElement === index }">Copied!</span>
       </Step>
     </div>

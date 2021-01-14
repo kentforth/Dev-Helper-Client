@@ -88,10 +88,10 @@ export default {
         console.log(error);
       }
     },
-    copyStep(index, stepText) {
+    async copyStep(index, stepText) {
       this.activeElement = index;
       console.log(stepText);
-      // navigator.clipboard.writeText("some random text");
+      await navigator.clipboard.writeText("some random text");
     },
     async deleteSnippet() {
       try {

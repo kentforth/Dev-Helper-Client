@@ -14,12 +14,7 @@
     <div class="steps">
       <Step v-for="(step, index) in steps" :key="step.title">
         <label for="text" v-if="step.title !== ''">{{ step.title }}</label>
-        <textarea
-          id="text"
-          rows="6"
-          v-model="step.text"
-          :ref="step.text"
-        ></textarea>
+        <textarea id="text" rows="6" v-model="step.text"></textarea>
         <font-awesome-icon
           icon="clone"
           class="icon"

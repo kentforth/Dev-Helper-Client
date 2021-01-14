@@ -91,7 +91,7 @@ export default {
     copyStep(index, stepText) {
       this.activeElement = index;
       console.log(stepText);
-      // navigator.clipboard.writeText(stepText);
+      navigator.clipboard.writeText(stepText);
     },
     async deleteSnippet() {
       try {

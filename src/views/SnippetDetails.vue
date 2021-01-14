@@ -14,7 +14,12 @@
     <div class="steps">
       <Step v-for="(step, index) in steps" :key="step.title">
         <label for="text" v-if="step.title !== ''">{{ step.title }}</label>
-        <textarea id="text" rows="6" v-model="step.text"></textarea>
+        <textarea
+          id="text"
+          rows="6"
+          v-model="step.text"
+          :ref="step.text"
+        ></textarea>
         <font-awesome-icon
           icon="clone"
           class="icon"
@@ -88,11 +93,12 @@ export default {
         console.log(error);
       }
     },
-    async copyStep(index, stepText) {
+    copyStep(index, stepText) {
       this.activeElement = index;
+      navigator.clipboard.writeText(stepText);
       console.log(stepText);
-      await navigator.clipboard.writeText(stepText);
     },
+
     async deleteSnippet() {
       try {
         const response = await SnippetsService.delete(this.$route.params.id);

@@ -91,7 +91,7 @@ export default {
     async copyStep(index, stepText) {
       this.activeElement = index;
       console.log(stepText);
-      await navigator.clipboard.writeText("some random text");
+      await navigator.clipboard.writeText(stepText);
     },
     async deleteSnippet() {
       try {

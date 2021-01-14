@@ -18,7 +18,7 @@
         <font-awesome-icon
           icon="clone"
           class="icon"
-          @click="copyStep(index, step.title)"
+          @click="copyStep(index, 'some text')"
         />
         <span :class="{ copy: activeElement === index }">Copied!</span>
       </Step>

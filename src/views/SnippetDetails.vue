@@ -89,10 +89,10 @@ export default {
         console.log(error);
       }
     },
-    copyStep(index, text) {
+    copyStep(index, anyText) {
       this.activeElement = index;
-      navigator.clipboard.writeText(text);
-      console.log(text);
+      // navigator.clipboard.writeText(text);
+      console.log(anyText);
     },
     async deleteSnippet() {
       try {

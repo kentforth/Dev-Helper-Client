@@ -81,7 +81,6 @@ export default {
         this.steps = snippet.data.steps;
         this.tags = snippet.data.tags;
         this.hasImages = snippet.data.hasImages;
-        console.log(this.steps[0].text);
         if (this.hasImages) {
           this.getImagesFromCloudinary();
         }
@@ -91,8 +90,7 @@ export default {
     },
     copyStep(index, anyText) {
       this.activeElement = index;
-      // navigator.clipboard.writeText(text);
-      console.log(anyText);
+      navigator.clipboard.writeText(anyText);
     },
     async deleteSnippet() {
       try {

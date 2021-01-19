@@ -92,7 +92,6 @@ export default {
       this.activeElement = index;
       try {
         await navigator.clipboard.writeText(stepText);
-        console.log(stepText);
       } catch (err) {
         console.error("Failed to copy: ", err);
       }

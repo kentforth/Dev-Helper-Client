@@ -1,6 +1,7 @@
 module.exports = {
   devServer: {
-    port: 13000
+    host: "localhost",
+    port: 13050
   },
   css: {
     loaderOptions: {
